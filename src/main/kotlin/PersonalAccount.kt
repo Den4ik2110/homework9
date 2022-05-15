@@ -13,12 +13,7 @@ fun personalAccount(user: User) {
             )
 
             when (readLine()) {
-                "1" -> {
-                    println("С кем хотите начать переписку?")
-                    val login = readLine() ?: return
-                    createNewChat(login, user)
-                    personalChat(user.chatList.last())
-                }
+                "1" -> newChat(user)
                 "0" -> return
             }
         } else {
@@ -34,40 +29,17 @@ fun personalAccount(user: User) {
             )
 
             when (readLine()) {
-                "1" -> {
-                    println("С кем хотите начать переписку?")
-                    val login = readLine() ?: return
-                    createNewChat(login, user)
-                    personalChat(user.chatList.last())
-                }
+                "1" -> newChat(user)
                 "2" -> user.chatList.forEach { println(it) }
                 "3" -> {
                     user.chatList.filter(::filterChat)
                         .forEach { println(it) }
                 }
-                "4" -> {
-                    println("С кем хотите продолжить переписку?")
-                    val login = readLine() ?: return
-                    for (chat in user.chatList) {
-                        if (chat.recipient == login) {
-                            personalChat(chat)
-                        } else {
-                            println("Чат с данным пользователем еще не создан")
-                        }
-                    }
-                }
+                "4" -> continueChat(user)
                 "5" -> {
                     println("Напишите id чата")
-                    val idInput = readLine()?.toInt() ?: return
-                    for (chat in user.chatList) {
-                        if (chat.id == idInput) {
-                            user.chatList.remove(chat)
-                            println("Чат со всеми сообщениями удален!")
-                            break
-                        } else {
-                            println("Чата с таким id не найдено")
-                        }
-                    }
+                    val idInput = readLine()?.toInt() ?: break
+                    deleteChat(user, idInput)
                 }
                 "0" -> return
             }

@@ -13,8 +13,8 @@ fun getUserByLoginAndPassword(login: String, password: String): User {
 }
 
 fun dropMeAndRepeat(login: String, user: User): Boolean {
+    if (user.chatList.isEmpty()) return user.login != login
     for (users in userList) {
-        if (users.chatList.isEmpty()) return user.login != login
         for (chat in users.chatList) {
             if (chat.recipient == login || user.login == login) return false
         }
@@ -22,17 +22,18 @@ fun dropMeAndRepeat(login: String, user: User): Boolean {
     return true
 }
 
-fun createNewChat(login: String, user: User) {
+fun createNewChat(login: String, user: User): Boolean {
     for (users in userList) {
         if (users.login == login && dropMeAndRepeat(login, user)) {
             val maxId = user.chatList.maxOfOrNull { it.id }
             val chat = Chat(login, maxId?.plus(1) ?: 1)
             user.chatList.add(chat)
             println("Новый чат создан!")
-            return
+            return true
         }
     }
     println("Пользователя с таким именем не существует, или пытаетесь создать второй чат с тем же пользователем, или с самим собой")
+    return false
 }
 
 fun searchRecipient(chat: Chat): Int {
